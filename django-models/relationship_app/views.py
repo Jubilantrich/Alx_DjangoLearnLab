@@ -8,12 +8,12 @@ from .models import Book, Library
 #This view will pull all book records and send them to the list_books.html template for display.
 def list_books(request):
     books = Book.objects.all()
-    return render(request,'relationship_app/templates/list_books.html', {'books': books})
+    return render(request,'relationship_app/list_books.html', {'books': books})
 
 
 
 #use DetailView to display details of specific library and its books
 class LibraryDetailView (DetailView):
     model = Library
-    Template = 'relationship_app/templates/library_details.html'
+    Template = 'relationship_app/library_details.html'
     context_object_name='library'
