@@ -23,10 +23,10 @@ class LibraryDetailView (DetailView):
     Template = 'relationship_app/library_detail.html'
     context_object_name='library'
 
-    class CLoginView(LoginView):
+    class LoginView(LoginView):
         template_name = 'relationship_app/login.hhml'
     
-    class CLogoutView(LogoutView):
+    class LogoutView(LogoutView):
         template_name = 'relationship_app/login.html'
 
     #Registration View
