@@ -168,3 +168,20 @@ CSP_CONNECT_SRC = ("'self'",)
 MIDDLEWARE += [
     'csp.middleware.CSPMiddleware',
 ]
+
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# Enforce HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Include subdomains in the HSTS policy
+SECURE_HSTS_PRELOAD = True  # Allow preloading by browsers
+
+# Secure cookies to ensure they are only sent over HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Security-related HTTP headers
+X_FRAME_OPTIONS = "DENY"  # Prevent clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME type sniffing
+SECURE_BROWSER_XSS_FILTER = True  # Enable browser's XSS protection
