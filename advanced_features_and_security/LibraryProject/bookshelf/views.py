@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404
 from .models import Book
+from .forms import ExampleForm
 
 
 # Create your views here.
@@ -26,3 +27,16 @@ def create_mymodel(request):
         content = request.POST.get('content')
         Book.objects.create(title=title, content=content)
     return render(request, 'app_name/create_mymodel.html')
+
+from django.shortcuts import render
+from .forms import ExampleForm
+
+def example_form_view(request):
+    if request.method == "POST":
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Process form data
+            pass
+    else:
+        form = ExampleForm()
+    return render(request, "form_example.html")
