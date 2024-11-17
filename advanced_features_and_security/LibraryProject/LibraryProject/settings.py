@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,8 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bookshelf',
     'relationship_app',
-    'bookshelf'
+    'users',
+    'django-csp'
+    
 ]
 
 MIDDLEWARE = [
@@ -56,7 +60,7 @@ ROOT_URLCONF = 'LibraryProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,8 +81,13 @@ WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db.sqlite3',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306'
+        
     }
 }
 
@@ -125,3 +134,37 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#redirecting the admin page
+AUTH_USER_MODEL = 'users.CustomUser'
+
+# Security settings
+DEBUG = False  # Ensure DEBUG is False in production
+
+# Add browser-side security protections
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enforce cookies over HTTPS only
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Set a strong secret key in production
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-development-key')
+
+# Allowed Hosts
+ALLOWED_HOSTS = ['yourdomain.com']  # Replace with your domain
+
+INSTALLED_APPS += ['csp']
+
+# Configure CSP settings
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'")  # Adjust as needed
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+CSP_IMG_SRC = ("'self'", 'data:')
+CSP_CONNECT_SRC = ("'self'",)
+
+MIDDLEWARE += [
+    'csp.middleware.CSPMiddleware',
+]
