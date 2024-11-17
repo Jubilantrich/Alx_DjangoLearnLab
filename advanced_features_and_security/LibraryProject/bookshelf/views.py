@@ -15,8 +15,8 @@ def view_mymodel(request):
 def edit_mymodel(request, pk):
     books = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
-        obj.title = request.POST.get('title')
-        obj.save()
+        books.title = request.POST.get('title')
+        books.save()
     return render(request, 'app_name/edit_mymodel.html', {'object': books})
 
 @permission_required('app_name.can_create', raise_exception=True)
