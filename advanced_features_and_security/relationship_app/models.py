@@ -27,7 +27,7 @@ books = Book.objects.prefetch_related('Author')
 #Library Model
 class Library(models.Model):
     name = models.CharField(max_length=100)
-    books = models.ManyToManyField(Book, on_delete=models.CASCADE, related_name='libraries')
+    books = models.ManyToManyField(Book, related_name='libraries')
 
     def __str__(self):
         return self.name

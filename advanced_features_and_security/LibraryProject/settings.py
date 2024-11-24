@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'bookshelf',
     'relationship_app',
     'users',
-    'django-csp'
+    'rest_framework',
     
 ]
 

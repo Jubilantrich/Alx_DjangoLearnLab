@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404
 from .models import Book
 from .forms import ExampleForm
+from rest_framework import generics
+from .serializers import BookSerializer
 
 
 # Create your views here.
@@ -40,3 +42,7 @@ def example_form_view(request):
     else:
         form = ExampleForm()
     return render(request, "form_example.html")
+
+class BookListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
