@@ -26,7 +26,7 @@ class Book(models.Model):
                   If the referenced author is deleted, all related books will also be deleted (CASCADE).
     """
     title = models.CharField(max_length=200)
-    published_year =models.IntegerField()
+    publication_year =models.IntegerField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
 
     def __str__(self) -> str:
