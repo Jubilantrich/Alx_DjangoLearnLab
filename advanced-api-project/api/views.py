@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from api.models import Book
 from api.serializers import BookSerializer
+from django_filters import rest_framework 
 from django_filters.rest_framework import DjangoFilterBackend
 
 """
