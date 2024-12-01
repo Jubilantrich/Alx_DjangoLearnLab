@@ -11,6 +11,8 @@ class BookAPITestCase(TestCase):
             "publication_year": 2023
         }
         self.book = Book.objects.create(**self.book_data)
+        self.client.login(username='testuser', password='testpassword')
+
     def test_create_book(self):
         response = self.client.post('/api/books/', {
             "title": "New Book",
