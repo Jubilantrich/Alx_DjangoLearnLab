@@ -131,6 +131,12 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.author
+                                                             
+def posts_by_tag(request, tag_name):
+    posts = Post.objects.filter( tags_name_icontains = tag_name )
+
+    return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag_name': tag_name})
+                                                      
 def search_posts(request):
     query = request.GET.get('q')
     results = Post.objects.all()
@@ -143,7 +149,3 @@ def search_posts(request):
         ).distinct()
 
     return render(request, 'blog/search_results.html', {'results': results, 'query': query})
-                                                        
-def posts_by_tag(request, tag_name):
-    posts = Post.objects.filter(tags_name_icontains=tag_name)
-    return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag_name': tag_name})
