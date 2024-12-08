@@ -39,7 +39,7 @@ def userProfile(request):
         user.email = request.POST.get('email', user.email)
         user.save()
         return HttpResponse("Profile updated successfully.")
-    return render(request, 'blog/accounts/profile.html', {'user': request.user})
+    return render(request, 'blog/profile.html', {'user': request.user})
 
 class BlogLoginView(LoginView):
     template_name = 'blog/login.html'
