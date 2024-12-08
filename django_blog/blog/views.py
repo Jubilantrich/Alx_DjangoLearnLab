@@ -133,7 +133,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == comment.author
                                                              
 def posts_by_tag(request, tag_name):
-    posts = Post.objects.filter( tags_name_icontains = tag_name )
+    posts = Post.objects.filter( tags__name__icontains = tag_name )
 
     return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag_name': tag_name})
                                                       
