@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from taggit.managers import TaggableManager
 
 # Create your models here.
 
@@ -30,4 +30,13 @@ class Comment(models.Model):
 
     def _str_(self):
         return f"Comment by {self.author} on {self.post.title}"
+    
+class Post(models.Model):
+    # Existing fields...
+    tags = TaggableManager()
+
+    def get_absolute_url(self):
+        return reverse('post-detail', args=[str(self.id)])    
+
+
 
