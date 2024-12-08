@@ -2,21 +2,50 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Details</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </link>
 </head>
+
 <body>
     <h1>{{ post.title }}</h1>
     <p>{{ post.content }}</p>
     <p>Author: {{ post.author }}</p>
     <p>Published: {{ post.published_date }}</p>
     {% if request.user == post.author %}
-        <a href="{% url 'post-update' post.pk %}">Edit</a>
-        <a href="{% url 'post-delete' post.pk %}">Delete</a>
+    <a href="{% url 'post-update' post.pk %}">Edit</a>
+    <a href="{% url 'post-delete' post.pk %}">Delete</a>
     {% endif %}
     <a href="{% url 'post-list' %}">Back to All Posts</a>
+
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in post.comments.all %}
+        <li>
+            <strong>{{ comment.author }}</strong> ({{ comment.created_at|date:"F j, Y, g:i a" }}):
+            <p>{{ comment.content }}</p>
+            {% if request.user == comment.author %}
+            <a href="{% url 'comment-update' comment.id %}">Edit</a>
+            <a href="{% url 'comment-delete' comment.id %}">Delete</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    {% if request.user.is_authenticated %}
+    <h3>Add a Comment</h3>
+    <form method="post" action="{% url 'add-comment' post.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Post Comment</button>
+    </form>
+    {% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to add a comment.</p>
+    {% endif %}
 </body>
+
 </html>
