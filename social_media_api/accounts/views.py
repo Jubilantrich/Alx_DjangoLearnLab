@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets, permissions
 from rest_framework.authtoken.models import Token
-from .serializers import UserSerializer, RegisterSerializer
-from .models import CustomUser
+from .serializers import UserSerializer, RegisterSerializer, PostSerializer, CommentSerializer
+from .models import CustomUser, Post, Comment
+
 
 # API View for user registration
 class RegisterView(APIView):
