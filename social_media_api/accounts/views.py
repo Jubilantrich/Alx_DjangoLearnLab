@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from .serializers import UserSerializer, RegisterSerializer
 from rest_framework import generics, status  # For GenericAPIView and status codes
-from rest_framework.permissions import IsAuthenticated  # For user authentication
+from rest_framework import permissions  # For user authentication
 from rest_framework.response import Response  # For sending API responses
 from django.shortcuts import get_object_or_404  # For safely retrieving objects
 from .models import CustomUser  # Import the CustomUser model
@@ -46,7 +46,7 @@ class FollowUserView(generics.GenericAPIView):
     View to allow a user to follow another user.
     """
     queryset = CustomUser.objects.all()  # Required for GenericAPIView
-    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access
+    permission_classes = [permissions.IsAuthenticated]  # Ensure only authenticated users can access
     
     def post(self, request, user_id):
         # Retrieve the user to be followed
@@ -72,7 +72,7 @@ class UnfollowUserView(generics.GenericAPIView):
     View to allow a user to unfollow another user.
     """
     queryset = CustomUser.objects.all()  # Required for GenericAPIView
-    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access
+    permission_classes = [permissions.IsAuthenticated]  # Ensure only authenticated users can access
     
     def post(self, request, user_id):
         # Retrieve the user to be unfollowed
