@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .serializers import LikeSerializer
 from notifications.models import Notification
-from rest_framework.generics import get_object_or_404
 
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
@@ -68,7 +67,7 @@ class LikePostView(generics.GenericAPIView):
 
     def post(self, request, pk):
         # Fetch the post or return 404
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
 
         # Create or retrieve the like object
         like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -96,7 +95,7 @@ class UnlikePostView(generics.GenericAPIView):
 
     def post(self, request, pk):
         # Fetch the post or return 404
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
 
         # Check if the user has already liked the post
         like = Like.objects.filter(user=request.user, post=post).first()
