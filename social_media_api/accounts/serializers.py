@@ -32,9 +32,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers', 'followers_count']
+        read_only_fields = ['id', 'username', 'followers']
 
     def get_followers_count(self, obj):
         """
         Custom method to count the number of followers.
         """
         return obj.followers.count()
+    
+class FollowSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()

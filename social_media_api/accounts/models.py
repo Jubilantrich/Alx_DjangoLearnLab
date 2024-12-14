@@ -9,7 +9,14 @@ class CustomUser(AbstractUser):
     # Profile picture for the user
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     # Many-to-Many relationship for followers, non-symmetrical to allow one-sided follows
-    followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
+   # followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
+    # Many-to-Many relationship for following other users
+    following = models.ManyToManyField(
+        'self',
+        symmetrical=False,  # Allows differentiation between followers and followees
+        related_name='followers',  # Access followers using user.followers
+        blank=True
+    )
 
     def __str__(self):
         # String representation of the user, showing their username
@@ -52,3 +59,4 @@ class Comment(models.Model):
     def __str__(self):
         # String representation of the Comment
         return f"Comment by {self.author.username} on {self.post.title}"
+    
