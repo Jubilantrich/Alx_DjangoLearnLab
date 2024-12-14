@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import get_object_or_404
 from rest_framework.authtoken.models import Token
 from .serializers import UserSerializer, RegisterSerializer
-from .models import CustomUser
+from rest_framework import generics, status  # For GenericAPIView and status codes
+from rest_framework.permissions import IsAuthenticated  # For user authentication
+from rest_framework.response import Response  # For sending API responses
+from django.shortcuts import get_object_or_404  # For safely retrieving objects
+from .models import CustomUser  # Import the CustomUser model
+from .serializers import UserSerializer  # Import UserSerializer if needed for validation or serialization
 
 
 # API View for user registration
@@ -39,20 +41,54 @@ class LoginView(APIView):
         # Return error if authentication fails
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-class FollowUserView(APIView):
+class FollowUserView(generics.GenericAPIView):
+    """
+    View to allow a user to follow another user.
+    """
+    queryset = CustomUser.objects.all()  # Required for GenericAPIView
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access
+    
     def post(self, request, user_id):
-        target_user = get_object_or_404(CustomUser, id=user_id)
-        if request.user == target_user:
-            return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+        # Retrieve the user to be followed
+        target_user = get_object_or_404(self.get_queryset(), id=user_id)
         
+        # Prevent the user from following themselves
+        if request.user == target_user:
+            return Response(
+                {"error": "You cannot follow yourself."}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Add the target user to the following list of the current user
         request.user.following.add(target_user)
-        return Response({"message": f"You are now following {target_user.username}."}, status=status.HTTP_200_OK)
-
-class UnfollowUserView(APIView):
-    def post(self, request, user_id):
-        target_user = get_object_or_404(CustomUser, id=user_id)
-        if request.user == target_user:
-            return Response({"error": "You cannot unfollow yourself."}, status=status.HTTP_400_BAD_REQUEST)
         
+        return Response(
+            {"message": f"You are now following {target_user.username}."}, 
+            status=status.HTTP_200_OK
+        )
+
+class UnfollowUserView(generics.GenericAPIView):
+    """
+    View to allow a user to unfollow another user.
+    """
+    queryset = CustomUser.objects.all()  # Required for GenericAPIView
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access
+    
+    def post(self, request, user_id):
+        # Retrieve the user to be unfollowed
+        target_user = get_object_or_404(self.get_queryset(), id=user_id)
+        
+        # Prevent the user from unfollowing themselves
+        if request.user == target_user:
+            return Response(
+                {"error": "You cannot unfollow yourself."}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Remove the target user from the following list of the current user
         request.user.following.remove(target_user)
-        return Response({"message": f"You have unfollowed {target_user.username}."}, status=status.HTTP_200_OK)
+        
+        return Response(
+            {"message": f"You have unfollowed {target_user.username}."}, 
+            status=status.HTTP_200_OK
+        )
