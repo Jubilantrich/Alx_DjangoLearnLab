@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Comment
+from .models import Post, Comment, Like
 
 class CommentSerializer(serializers.ModelSerializer):
     # Read-only field to display the username of the comment's author
@@ -21,3 +21,8 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post  # Specify the model for this serializer
         fields = ['id', 'author', 'author_username', 'title', 'content', 'created_at', 'updated_at', 'comments']
         read_only_fields = ['author', 'created_at', 'updated_at']  # Fields that cannot be updated by the user
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ['id', 'post', 'user', 'created_at']
